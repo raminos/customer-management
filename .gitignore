@@ -121,6 +121,14 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+# Config File
+config.js
+
+#OpenSSL
+cert.csr
+certificate.pem
+private.key
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
