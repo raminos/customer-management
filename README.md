@@ -1,6 +1,7 @@
-# Customer Management
+# Customer Management Rest API
 
-## Specification:
+## Task requirements
+### Specification
 - **Overview page:**
     - Lists all customers
     - Add a new customer
@@ -9,8 +10,15 @@
 - **Customer Detail page:**
     - Edit & remove profile data
 
-## Bonus:
+### Bonus
 - Setup a node server
 - Use persistent data storage (MongoDB, ...)
 - Host the application (Heroku, ...)
 - Continuous Integration & Development (Jenkins & Travis)
+
+## Tech stack
+- Node.js with Express.js
+- MongoDB with Mongoose
+- OpenSSL
+- User Authentication with Passport.js
+- JSON Web Tokens
