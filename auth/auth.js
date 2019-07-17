@@ -1,0 +1,53 @@
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const config = require('../config');
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const jwt = require('jsonwebtoken');
+
+const User = require('./models/user');
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+passport.use(new JwtStrategy({
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: config.secretOrKey
+},
+    (jwt_payload, done) => {
+        console.log("JWT payload: ", jwt_payload);
+        User.findOne({ _id: jwt_payload._id }, (err, user) => {
+            if (err) {
+                return done(err, false);
+            }
+            else if (user) {
+                return done(null, user);
+            }
+            else {
+                return done(null, false);
+            }
+        });
+    }));
+
+const verifyUser = passport.authenticate('jwt', { session: false });
+
+function getToken(user) {
+    return jwt.sign(user, config.secretOrKey, { expiresIn: 360000 });
+};
+
+function verifyAdmin(req, res, next) {
+    if (req.user.admin === true) {
+        return next();
+    }
+    else {
+        err = new Error('You are not allowed to perform this operation!');
+        err.status = 403;
+        return next(err);
+    }
+}
+
+module.exports = {
+    getToken,
+    verifyUser,
+    verifyAdmin
+}

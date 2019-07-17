@@ -1,9 +1,7 @@
 const express = require('express');
-const router = express.Router();
+const passport = require('passport');
+const bodyParser = require('body-parser');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const router = express.Router();
 
 module.exports = router;
