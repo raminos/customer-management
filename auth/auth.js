@@ -5,9 +5,9 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken');
 
-const User = require('./models/user');
+const User = require('../models/user');
 
-passport.use(new LocalStrategy(User.authenticate()));
+passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 passport.use(new JwtStrategy({
@@ -31,8 +31,8 @@ passport.use(new JwtStrategy({
 
 const verifyUser = passport.authenticate('jwt', { session: false });
 
-function getToken(user) {
-    return jwt.sign(user, config.secretOrKey, { expiresIn: 360000 });
+function getToken(userId) {
+    return jwt.sign(userId, config.secretOrKey, { expiresIn: 360000 });
 };
 
 function verifyAdmin(req, res, next) {

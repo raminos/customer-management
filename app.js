@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const config = require('./config');
-
+const passport = require('passport');
 
 // routers
 const indexRouter = require('./routes/index');
@@ -14,13 +14,19 @@ const usersRouter = require('./routes/users');
 const articlesRouter = require('./routes/articles');
 const customersRouter = require('./routes/customers');
 
+// These three are to get rid of the depreciation warnings
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 // MongoDB set up
 const mongoUrl = config.mongoUrl;
 const connect = mongoose.connect(mongoUrl);
 
+
 connect.then((db) => {
   console.log('Connected correctly to the database');
 }, (err) => { console.log(err); });
+
 
 // Express set up
 const app = express();
@@ -45,12 +51,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
 // routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/customers', customersRouter);
-app.use('/articles', articlesRouter);
+//app.use('/customers', customersRouter);
+//app.use('/articles', articlesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
