@@ -4,13 +4,17 @@ const Schema = mongoose.Schema;
 const orderSchema = new Schema({
     article: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article'
+        ref: 'Article',
+        required: true
     },
     deliveryStatus: {
         type: String,
-        required: true
+        required: true,
+        default: "order taken"
     }
-});
+},{
+        timestamps: true
+    });
 
 const customerSchema = new Schema({
     firstName: {

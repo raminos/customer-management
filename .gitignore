@@ -123,6 +123,7 @@ typings/
 
 # Config File
 config.js
+db.json
 
 #OpenSSL
 cert.csr

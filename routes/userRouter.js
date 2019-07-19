@@ -4,8 +4,8 @@ const auth = require('../auth/auth');
 const bodyParser = require('body-parser');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
-const router = express.Router();
 
+const router = express.Router();
 router.use(bodyParser.json());
 
 router.route('/register')

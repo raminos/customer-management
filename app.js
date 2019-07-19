@@ -9,10 +9,10 @@ const config = require('./config');
 const passport = require('passport');
 
 // routers
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const articlesRouter = require('./routes/articles');
-const customersRouter = require('./routes/customers');
+const indexRouter = require('./routes/indexRouter');
+const usersRouter = require('./routes/userRouter');
+const articlesRouter = require('./routes/articleRouter');
+const customersRouter = require('./routes/customerRouter');
 
 // These three are to get rid of the depreciation warnings
 mongoose.set('useNewUrlParser', true);
@@ -56,8 +56,8 @@ app.use(passport.initialize());
 // routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-//app.use('/customers', customersRouter);
-//app.use('/articles', articlesRouter);
+app.use('/customers', customersRouter);
+app.use('/articles', articlesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
