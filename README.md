@@ -22,3 +22,11 @@
 - OpenSSL
 - User Authentication with Passport.js
 - JSON Web Tokens
+
+## Setting up the project
+- add a config.js file with the following variables:
+    - *'mongoUrl'* with the path to your mongoDB
+    - *'port'* and *'secPort'* for HTTPS support
+    - *'secretOrKey'* to sign the JSON Web Tokens
+- add *cert.csr*, *certificate.pem* and *private.key* files with OpenSSL in the **bin** folder
+  
