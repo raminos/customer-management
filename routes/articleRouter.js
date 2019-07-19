@@ -6,6 +6,7 @@ const Article = require('../models/article');
 const router = express.Router();
 router.use(bodyParser.json());
 
+// routes to access the collection in general
 router.route('/')
     //This request is allowed for everyone.
     .get((req, res, next) => {
@@ -24,7 +25,7 @@ router.route('/')
             .then((newArticle) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json({ success: true, status: 'Added the following article successfully: ' + req.body.name })
+                res.json(newArticle);
             })
             .catch((err) => next(err));
     })
@@ -43,6 +44,7 @@ router.route('/')
             .catch((err) => next(err));
     });
 
+// routes to access individual articles
 router.route('/:articleId')
     .get((req, res, next) => {
         Article.find({ _id: req.params.articleId })
@@ -94,5 +96,7 @@ function isAnUniqueArticle(req, res, next) {
         })
         .catch((err) => next(err));
 }
+
+// for discussions regarding the API response design see the customerRouter.js file
 
 module.exports = router;

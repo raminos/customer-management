@@ -5,6 +5,7 @@ const Customer = require('../models/customer');
 const mongoose = require('mongoose');
 
 const router = express.Router();
+// we use bodyParser to easily access the information needed from the request's body
 router.use(bodyParser.json());
 
 // routes to access all customers
@@ -25,7 +26,7 @@ router.route('/')
             .then((newCustomer) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json({ success: true, status: 'Added the following customer successfully: ' + req.body.firstName + " " + req.body.lastName })
+                res.json(newCustomer);
             })
             .catch((err) => next(err));
     })
@@ -94,6 +95,7 @@ router.route('/:customerId/orders/')
                 // the Json string of the req.body.article needs to be transformed into a mongoDB objectId before pushing it into the entry
                 req.body.article = mongoose.Types.ObjectId(req.body.article);
                 customer.orders.push(req.body);
+                // in case of indirect manipulation of the document through a variable we need to save the result!
                 customer.save()
                     .then((newOrder) => {
                         res.statusCode = 200;
@@ -140,6 +142,7 @@ router.route('/:customerId/orders/:orderId')
                     customer.orders.id(req.params.orderId).deliveryStatus = req.body.deliveryStatus;
                 }
                 if (req.body.article) {
+                    // See the explanation above regarding the mongoose usage
                     req.body.article = mongoose.Types.ObjectId(req.body.article);
                     customer.orders.id(req.params.orderId).article = req.body.article;
                 }
@@ -167,5 +170,7 @@ router.route('/:customerId/orders/:orderId')
             })
             .catch((err) => next(err));
     });
+
+// there is one inconsistency in this API. Most of the time we send back the manipulated document just not in case of the removal of a complete customer. In this case the client will just receive a success message. It wouldn't make sense to send the remaining users to the client. This creates security problems, as well as an unnecessary data exchange.Í
 
 module.exports = router;

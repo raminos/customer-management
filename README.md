@@ -29,4 +29,3 @@
     - *'port'* and *'secPort'* for HTTPS support
     - *'secretOrKey'* to sign the JSON Web Tokens
 - add *cert.csr*, *certificate.pem* and *private.key* files with OpenSSL in the **bin** folder
-  

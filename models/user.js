@@ -21,6 +21,7 @@ const User = new Schema({
     }
 });
 
+// email and password properties are added by the passportLocalMongoose module
 User.plugin(passportLocalMongoose, { usernameField : 'email' });
 
 module.exports = mongoose.model('User', User);

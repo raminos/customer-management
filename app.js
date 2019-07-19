@@ -14,19 +14,18 @@ const usersRouter = require('./routes/userRouter');
 const articlesRouter = require('./routes/articleRouter');
 const customersRouter = require('./routes/customerRouter');
 
-// These three are to get rid of the depreciation warnings
+// These three are needed to get rid of mongoose's depreciation warnings
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
+
 // MongoDB set up
 const mongoUrl = config.mongoUrl;
 const connect = mongoose.connect(mongoUrl);
 
-
 connect.then((db) => {
   console.log('Connected correctly to the database');
 }, (err) => { console.log(err); });
-
 
 // Express set up
 const app = express();
