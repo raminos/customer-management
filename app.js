@@ -1,4 +1,3 @@
-// requirements
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -8,13 +7,12 @@ const mongoose = require('mongoose');
 const config = require('./config');
 const passport = require('passport');
 
-// routers
-const indexRouter = require('./routes/indexRouter');
+// Routers
 const usersRouter = require('./routes/userRouter');
 const articlesRouter = require('./routes/articleRouter');
 const customersRouter = require('./routes/customerRouter');
 
-// These three are needed to get rid of mongoose's depreciation warnings
+// These are needed for Mongoose's depreciation warnings.
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
@@ -30,11 +28,7 @@ connect.then((db) => {
 // Express set up
 const app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-// making sure that only HTTPS is used
+// Making sure that only HTTPS is used for requests.
 app.all('*', (req, res, next) => {
   if (req.secure) {
     return next();
@@ -44,7 +38,7 @@ app.all('*', (req, res, next) => {
   }
 });
 
-// middleware
+// Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -52,19 +46,19 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
-// routes
-app.use('/', indexRouter);
+// Routes
 app.use('/users', usersRouter);
 app.use('/customers', customersRouter);
 app.use('/articles', articlesRouter);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
+// Catch 404 and forward them to the error handler
+app.use((req, res, next) => {
   next(createError(404));
 });
 
-// error handler
-app.use(function (err, req, res, next) {
+// Error handler
+app.use((err, req, res, next) => {
+  
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -1,17 +1,18 @@
-// requirements
 const express = require('express');
 const passport = require('passport');
 const auth = require('../auth/auth');
 const bodyParser = require('body-parser');
 const User = require('../models/user');
 
-// router set up
+// Router set up
 const router = express.Router();
 router.use(bodyParser.json());
 
-// registering the User using passport.js
+// Registering the User using passport.js
 router.route('/register')
   .post((req, res, next) => {
+    
+    // Passport will use the user's email as their unique username
     User.register(new User({ email: req.body.email }),
       req.body.password, (err, user) => {
         if (err) {
@@ -20,6 +21,8 @@ router.route('/register')
           res.json({ err: err });
           return;
         }
+
+        // If the request specifies firstName and lastName those get saved as well.
         if (req.body.firstName) user.firstName = req.body.firstName;
         if (req.body.lastName) user.lastName = req.body.lastName;
         user.save((err, user) => {
@@ -38,7 +41,12 @@ router.route('/register')
       })
   });
 
-// login using passport's local strategy and issuing a JSON Web Token. The Token is not saved in the cookies. The client needs to send the token with every request in it's header under *Authorization*
+
+/**
+ * Login using passport's local strategy and issuing a JSON Web Token. The Token is not 
+ * saved in the cookies. The client needs to send the bearer token with every request in it's 
+ * header under *Authorization*
+ */
 router.route('/login')
   .post(passport.authenticate('local'), (req, res, next) => {
     let token = auth.getToken({ _id: req.user._id });
@@ -47,7 +55,7 @@ router.route('/login')
     res.json({ success: true, token: token, status: 'Login Successful!' })
   });
 
-// route fot the admin to see all the registered users
+// Route for the admin to see all the registered users
 router.route('/')
   .get(auth.verifyUser, auth.verifyAdmin, (req, res, next) => {
     User.find({})

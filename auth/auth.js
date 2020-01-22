@@ -10,6 +10,11 @@ const User = require('../models/user');
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+/**
+ * Instead of cookies passport will serve JSON web token. These need to be sent directly
+ * by the client and won't be saved in the cookies.
+*/
 passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.secretOrKey
@@ -29,12 +34,17 @@ passport.use(new JwtStrategy({
         });
     }));
 
-const verifyUser = passport.authenticate('jwt', { session: false });
 
+
+// returns a hashed JSON web token based on the user Id and the set secret
 function getToken(userId) {
     return jwt.sign(userId, config.secretOrKey, { expiresIn: 360000 });
 };
 
+// Middleware to check whether the request comes from a registered user.
+const verifyUser = passport.authenticate('jwt', { session: false });
+
+// Middleware to check whether the request comes from an admin.
 function verifyAdmin(req, res, next) {
     if (req.user.admin === true) {
         return next();

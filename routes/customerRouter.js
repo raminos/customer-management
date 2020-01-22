@@ -5,7 +5,7 @@ const Customer = require('../models/customer');
 const mongoose = require('mongoose');
 
 const router = express.Router();
-// we use bodyParser to easily access the information needed from the request's body
+
 router.use(bodyParser.json());
 
 // routes to access all customers
@@ -20,7 +20,7 @@ router.route('/')
             .catch((err) => next(err));
     })
     //Only Users can add new customers.
-    //The uniqueness of an customer will be checked through a custom function
+    //The uniqueness of a customer will be checked through a custom function
     .post(auth.verifyUser, (req, res, next) => {
         Customer.create(req.body)
             .then((newCustomer) => {
@@ -170,7 +170,5 @@ router.route('/:customerId/orders/:orderId')
             })
             .catch((err) => next(err));
     });
-
-// there is one inconsistency in this API. Most of the time we send back the manipulated document just not in case of the removal of a complete customer. In this case the client will just receive a success message. It wouldn't make sense to send the remaining users to the client. This creates security problems, as well as an unnecessary data exchange.Í
 
 module.exports = router;
